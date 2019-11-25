@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: forInterval.js</title>
+    <title>JSDoc: Source: taxDetail.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: forInterval.js</h1>
+    <h1 class="page-title">Source: taxDetail.js</h1>
 
     
 
@@ -26,32 +26,28 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>/**
- * Create a function than calculate the amount between the bounds of the interval (min, max]. That means how much
- * money is concerned by the interval.
- * &lt;br>
- * If max is not passed at function then input amount is considered as max so the bounds are (min, amount].
+            <pre class="prettyprint source linenums"><code>import { map } from 'ramda'
+import { taxApply } from './taxApply'
+
+/**
+ * Create a function that calculate the tax of each tax bracket
  *
- * @sig (Number, Number) -> Number -> Number
+ * @sig [Function] -> Number -> [Number]
  *
- * @param {Number} min start of the interval
- * @param {Number} max end of the interval (optional, if not set use amount as max)
- * @returns {Function} The interval calculator
+ * @param {Array} taxBracket
+ * @return {Function}
  *
  * @example
  *
- * const interval1000_2000 = forInterval(1000, 2000)
- * interval1000_2000(3000) // => 1000 all amount is in the interval
- * interval1000_2000(1500) // => 500 are in the interval
- * interval1000_2000(1000) // => 0 the amount out of interval
+ * const bracket1 = taxBracket(rateAt(0.1), forInterval(0, 2000)) // bracket1(5000)=> 200
+ * const bracket2 = taxBracket(rateAt(0.2), forInterval(2000)) // bracket2(5000)=> 600
  *
- * // without max
- * const intervalFrom1000 = forInterval(1000)
- * intervalFrom1000(3000) // => 2000
+ * taxDetail([bracket1, bracket2])(5000) //=> [200, 600]
  *
+ * @see {@link taxApply}, {@link tax}
  */
-const forInterval = (min, max) => amount => Math.max(Math.min(max || amount, amount) - min, 0)
-export { forInterval }
+const taxDetail = taxBracket => amount => map(taxApply(amount), taxBracket)
+export { taxDetail }
 </code></pre>
         </article>
     </section>
